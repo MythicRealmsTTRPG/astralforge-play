@@ -328,6 +328,7 @@
   @media (max-width: 640px){
     .controls{ grid-template-columns: 1fr; }
     .grid{ grid-template-columns: 1fr; }
+    .count-row{ align-items:flex-start; flex-direction:column; }
   }
 </style>
 </head>
@@ -344,6 +345,10 @@
     <div class="nav-links">
       <a href="/campaigns/" aria-current="page">Campaigns</a>
       <a href="/#private">Private Bookings</a>
+
+      <!-- Build Campaign -->
+      <a class="cta" href="/campaigns/builder/">Build Campaign</a>
+
       <a class="cta" href="https://astralforge.studio/membership/" target="_blank" rel="noopener">Join</a>
     </div>
   </div>
@@ -370,7 +375,8 @@
       <select id="system">
         <option value="">Any</option>
         <option>D&amp;D 5e</option>
-        <option>Pathfinder 2e</option>
+        <option>Call of Cthulhu/option>
+        <option>Walking Dead</option>
         <option>Other</option>
       </select>
     </div>
@@ -397,7 +403,11 @@
 <main class="stage">
   <div class="count-row">
     <div><span id="count">0</span> campaigns shown</div>
-    <div style="opacity:.8;">Tip: add thumbnails in <code>/assets/campaigns/</code></div>
+
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <div style="opacity:.8;">Tip: add thumbnails in <code>/assets/campaigns/</code></div>
+      <a class="btn primary" href="/campaigns/builder/">Build Campaign</a>
+    </div>
   </div>
 
   <section class="grid" id="grid" aria-label="Campaign list"></section>
@@ -419,8 +429,10 @@
 </footer>
 
 <script>
-  // Replace these with your real campaigns. Later: load from JSON or an API.
- 
+  // Replace these with your real campaigns. Pretty URLs (A) use /campaigns/<slug>/
+  const campaigns = [
+    
+  ];
 
   const elGrid = document.getElementById("grid");
   const elCount = document.getElementById("count");
@@ -439,15 +451,18 @@
     elEmpty.style.display = list.length ? "none" : "block";
 
     for (const c of list){
-      const detailsHref = c.detailsUrl || `/campaigns/${c.slug}.html`;
+      // Pretty URL campaign detail: /campaigns/<slug>/
+      const detailsHref = c.detailsUrl || `/campaigns/${c.slug}/`;
 
       const card = document.createElement("article");
       card.className = "card";
 
       const thumb = document.createElement("div");
       thumb.className = "thumb";
-      if (c.thumb) thumb.style.backgroundImage =
-        `radial-gradient(circle at 25% 20%, rgba(255,255,255,.08), rgba(0,0,0,.65)), url("${c.thumb}")`;
+      if (c.thumb) {
+        thumb.style.backgroundImage =
+          `radial-gradient(circle at 25% 20%, rgba(255,255,255,.08), rgba(0,0,0,.65)), url("${c.thumb}")`;
+      }
       card.appendChild(thumb);
 
       const body = document.createElement("div");
