@@ -1,497 +1,360 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="dark light" />
-  <meta name="theme-color" content="#0b0f14" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Astral Forge Studio</title>
-  <meta name="description" content="Astral Forge Studio — campaign worlds, playable experiences, and a living codex for tabletop adventures." />
+<title>Play • Astral Forge</title>
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Astral Forge Studio" />
-  <meta property="og:description" content="Campaign worlds, playable experiences, and a living codex for tabletop adventures." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://astralforge.studio/" />
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Basic favicon placeholders (optional) -->
-  <link rel="icon" href="/favicon.ico" />
+<style>
+:root{
+  --bg:#0b0b0d;
+  --text:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.72);
+  --border:rgba(255,255,255,.10);
+}
 
-  <!-- Preconnect hints (optional, safe) -->
-  <link rel="dns-prefetch" href="//play.astralforge.studio">
-  <link rel="dns-prefetch" href="//shop.astralforge.studio">
-  <link rel="dns-prefetch" href="//codex.astralforge.studio">
+*{ box-sizing:border-box; }
 
-  <style>
-    :root{
-      --bg0:#070a0f;
-      --bg1:#0b0f14;
-      --card:rgba(255,255,255,.06);
-      --card2:rgba(255,255,255,.09);
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.72);
-      --faint:rgba(255,255,255,.55);
-      --line:rgba(255,255,255,.14);
-      --glow:rgba(170,120,255,.22);
-      --accent1:#a07cff;
-      --accent2:#57d6ff;
-      --good:#7CFFB2;
-      --shadow: 0 16px 60px rgba(0,0,0,.45);
-      --radius: 20px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    }
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:var(--sans);
-      color:var(--text);
-      background:
-        radial-gradient(1200px 800px at 12% 18%, rgba(160,124,255,.25), transparent 60%),
-        radial-gradient(1000px 700px at 88% 22%, rgba(87,214,255,.18), transparent 55%),
-        radial-gradient(900px 700px at 50% 92%, rgba(255,255,255,.06), transparent 60%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      overflow-x:hidden;
-    }
+/* ================= NAV ================= */
 
-    .wrap{
-      min-height:100%;
-      display:flex;
-      flex-direction:column;
-    }
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  background:rgba(0,0,0,.55);
+  border-bottom:1px solid var(--border);
+  z-index:1000;
+  box-shadow:0 6px 30px rgba(0,0,0,.45);
+}
 
-    header{
-      padding:28px 18px 10px;
-    }
+.nav-inner{
+  padding:14px 56px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:18px;
+}
 
-    .bar{
-      max-width:1100px;
-      margin:0 auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  color:var(--text);
+  white-space:nowrap;
+}
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      text-decoration:none;
-      color:inherit;
-    }
+.brand img{
+  height:38px;
+  width:auto;
+  display:block;
+}
 
-    .sigil{
-      width:44px;height:44px;border-radius:14px;
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.24), transparent 55%),
-        linear-gradient(135deg, rgba(160,124,255,.9), rgba(87,214,255,.75));
-      box-shadow: 0 10px 40px rgba(160,124,255,.22), 0 10px 40px rgba(87,214,255,.12);
-      position:relative;
-      overflow:hidden;
-    }
-    .sigil::after{
-      content:"";
-      position:absolute; inset:-40%;
-      background: conic-gradient(from 120deg, transparent, rgba(255,255,255,.22), transparent 40%);
-      animation: spin 6s linear infinite;
-      opacity:.9;
-    }
-    @keyframes spin{to{transform:rotate(360deg)}}
+.brand-text{
+  font-family:"Cinzel",serif;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-size:14px;
+  font-weight:700;
+}
 
-    .brand h1{
-      margin:0;
-      font-size:14px;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      opacity:.92;
-    }
-    .brand .sub{
-      margin:2px 0 0;
-      font-size:12px;
-      color:var(--muted);
-      letter-spacing:.03em;
-    }
+.nav-links{
+  display:flex;
+  gap:18px;
+  align-items:center;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
 
-    nav{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
+.nav-links a{
+  text-decoration:none;
+  color:rgba(255,255,255,.8);
+  padding:8px 12px;
+  border-radius:10px;
+  font-size:14px;
+  transition:.2s;
+}
 
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      text-decoration:none;
-      font-size:13px;
-      transition: transform .15s ease, background .15s ease, border-color .15s ease;
-      user-select:none;
-    }
-    .pill:hover{
-      transform: translateY(-1px);
-      background:rgba(255,255,255,.07);
-      border-color:rgba(255,255,255,.22);
-    }
+.nav-links a:hover{
+  background:rgba(255,255,255,.06);
+  color:rgba(255,255,255,.95);
+}
 
-    main{
-      flex:1;
-      padding:18px 18px 56px;
-    }
+.nav-links a.join{
+  border:1px solid rgba(185,144,84,.55);
+  background:linear-gradient(135deg, rgba(185,144,84,.18), rgba(0,0,0,.12));
+  color:rgba(255,255,255,.95);
+  box-shadow:0 10px 30px rgba(185,144,84,.12);
+}
 
-    .hero{
-      max-width:1100px;
-      margin:0 auto;
-      padding:30px 0 0;
-      display:grid;
-      gap:18px;
-    }
+.nav-links a.join:hover{
+  border-color:rgba(185,144,84,.85);
+  transform:translateY(-1px);
+}
 
-    .headline{
-      padding:26px 22px;
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      position:relative;
-      overflow:hidden;
-    }
+/* ================= HERO ================= */
 
-    .headline::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(600px 260px at 20% 10%, rgba(160,124,255,.18), transparent 60%),
-                  radial-gradient(520px 240px at 80% 10%, rgba(87,214,255,.14), transparent 58%);
-      pointer-events:none;
-    }
+.hero{
+  position:relative;
+  margin-top:72px;
+  width:100%;
+  overflow:hidden;
+  background:#000;
+}
 
-    .kicker{
-      font-family:var(--mono);
-      font-size:12px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--faint);
-      position:relative;
-      margin:0 0 12px;
-    }
+.hero-image{
+  width:100%;
+  height:calc(100vh - 72px);
+  max-height:760px;
+  object-fit:cover;
+  display:block;
+}
 
-    .headline h2{
-      position:relative;
-      margin:0;
-      font-size: clamp(28px, 4vw, 46px);
-      line-height:1.05;
-      letter-spacing:-.02em;
-    }
+.hero-overlay{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,.25), rgba(0,0,0,.65));
+  pointer-events:none;
+}
 
-    .headline p{
-      position:relative;
-      margin:12px 0 0;
-      max-width:70ch;
-      color:var(--muted);
-      font-size:16px;
-      line-height:1.55;
-    }
+.hero-text{
+  position:absolute;
+  right:6%;
+  bottom:10%;
+  text-align:right;
+  max-width:min(640px, 90%);
+  text-shadow:0 6px 24px rgba(0,0,0,.80);
+}
 
-    .ctaRow{
-      position:relative;
-      margin-top:18px;
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
+.hero-text h1{
+  margin:0;
+  font-family:Georgia,serif;
+  font-size:clamp(36px, 4.8vw, 60px);
+}
 
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      text-decoration:none;
-      font-size:14px;
-      transition: transform .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-      min-width: 150px;
-    }
-    .btn:hover{
-      transform: translateY(-1px);
-      background:rgba(255,255,255,.08);
-      border-color:rgba(255,255,255,.25);
-      box-shadow: 0 12px 40px rgba(0,0,0,.35);
-    }
-    .btn.primary{
-      border-color: rgba(160,124,255,.55);
-      background: linear-gradient(135deg, rgba(160,124,255,.30), rgba(87,214,255,.18));
-      box-shadow: 0 14px 50px rgba(160,124,255,.12), 0 14px 50px rgba(87,214,255,.08);
-    }
-    .btn.primary:hover{
-      border-color: rgba(160,124,255,.75);
-      background: linear-gradient(135deg, rgba(160,124,255,.36), rgba(87,214,255,.22));
-    }
+.hero-text h2{
+  margin:10px 0 0;
+  font-family:Georgia,serif;
+  font-size:clamp(20px, 2.6vw, 30px);
+  font-weight:600;
+  opacity:.92;
+}
 
-    .grid{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap:14px;
-    }
+.hero-text p{
+  margin:14px 0 0;
+  font-size:14px;
+  line-height:1.6;
+  color:rgba(255,255,255,.78);
+}
 
-    .card{
-      grid-column: span 12;
-      padding:18px 18px 16px;
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.04);
-      border: 1px solid var(--line);
-      box-shadow: 0 12px 40px rgba(0,0,0,.22);
-      position:relative;
-      overflow:hidden;
-    }
+/* ================= CONTENT ================= */
 
-    .card::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background: radial-gradient(500px 200px at 30% -10%, rgba(160,124,255,.12), transparent 60%),
-                  radial-gradient(450px 180px at 85% 0%, rgba(87,214,255,.10), transparent 60%);
-      pointer-events:none;
-      opacity:.85;
-    }
+main{
+  background:
+    radial-gradient(1200px 600px at 20% 10%, rgba(185,144,84,.08), transparent 55%),
+    radial-gradient(900px 500px at 85% 0%, rgba(255,255,255,.05), transparent 60%),
+    var(--bg);
+}
 
-    .card h3{
-      position:relative;
-      margin:0 0 6px;
-      font-size:16px;
-      letter-spacing:.01em;
-    }
+.section{
+  padding:80px 10%;
+  position:relative;
+}
 
-    .card p{
-      position:relative;
-      margin:0 0 12px;
-      color:var(--muted);
-      line-height:1.55;
-      font-size:14px;
-    }
+.section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(rgba(0,0,0,.72), rgba(0,0,0,.86));
+  pointer-events:none;
+}
 
-    .card a{
-      position:relative;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      color:var(--text);
-      text-decoration:none;
-      font-size:13px;
-      padding:9px 11px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      transition: transform .15s ease, background .15s ease, border-color .15s ease;
-    }
-    .card a:hover{
-      transform: translateY(-1px);
-      background:rgba(255,255,255,.07);
-      border-color:rgba(255,255,255,.24);
-    }
+.section > *{
+  position:relative;
+  z-index:1;
+}
 
-    .badge{
-      font-family:var(--mono);
-      font-size:11px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      padding:6px 8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(255,255,255,.04);
-      color:var(--faint);
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-    }
+.section h2{
+  margin:0 0 26px;
+  font-family:'Cinzel', serif;
+  font-weight:600;
+  letter-spacing:.6px;
+}
 
-    footer{
-      padding:18px 18px 28px;
-      color:var(--faint);
-    }
+/* Cards */
 
-    .foot{
-      max-width:1100px;
-      margin:0 auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      border-top:1px solid rgba(255,255,255,.10);
-      padding-top:16px;
-    }
+.cards{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
 
-    .small{
-      font-size:12px;
-      color:var(--faint);
-    }
+.card{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.28);
+  border-radius:16px;
+  padding:26px;
+  transition:.2s ease;
+}
 
-    .links{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
+.card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(255,255,255,.22);
+}
 
-    .links a{
-      color:var(--faint);
-      text-decoration:none;
-      font-size:12px;
-      border-bottom:1px dashed rgba(255,255,255,.18);
-      padding-bottom:2px;
-    }
-    .links a:hover{color:var(--text); border-bottom-color:rgba(255,255,255,.35)}
+.card h3{
+  margin:0 0 10px;
+  font-family:Georgia,serif;
+}
 
-    /* Responsive columns */
-    @media (min-width: 760px){
-      .card{grid-column: span 6;}
-      .headline{padding:34px 30px;}
-    }
-    @media (min-width: 1040px){
-      .card{grid-column: span 4;}
-    }
+.card p{
+  margin:0 0 16px;
+  color:var(--muted);
+  line-height:1.7;
+  font-size:14px;
+}
 
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      .sigil::after{animation:none}
-      .pill,.btn,.card a{transition:none}
-    }
-  </style>
+.button{
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:10px;
+  border:1px solid rgba(185,144,84,.55);
+  background:rgba(185,144,84,.12);
+  color:#fff;
+  text-decoration:none;
+  font-size:14px;
+  transition:.2s ease;
+}
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Astral Forge Studio",
-    "url": "https://astralforge.studio/",
-    "sameAs": [
-      "https://play.astralforge.studio/",
-      "https://shop.astralforge.studio/",
-      "https://codex.astralforge.studio/",
-      "https://games.astralforge.studio/"
-    ]
-  }
-  </script>
+.button:hover{
+  background:rgba(185,144,84,.28);
+  transform:translateY(-1px);
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+  background:rgba(0,0,0,.70);
+  border-top:1px solid var(--border);
+}
+
+.footer-inner{
+  max-width:1200px;
+  margin:auto;
+  padding:18px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:18px;
+  color:rgba(255,255,255,.7);
+  font-size:14px;
+}
+
+.footer-links{
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.footer-links a{
+  color:rgba(255,255,255,.8);
+  text-decoration:none;
+}
+
+.footer-links a:hover{ color:white; }
+
+@media (max-width:980px){
+  .nav-inner{ padding:14px 18px; }
+  .cards{ grid-template-columns:1fr; }
+}
+
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <div class="bar">
-        <a class="brand" href="https://astralforge.studio/" aria-label="Astral Forge Studio home">
-          <div class="sigil" aria-hidden="true"></div>
-          <div>
-            <h1>ASTRAL FORGE</h1>
-            <div class="sub">Studio portal • campaigns • tools • lore</div>
-          </div>
-        </a>
 
-        <nav aria-label="Primary">
-          <a class="pill" href="https://play.astralforge.studio/">Play</a>
-          <a class="pill" href="https://games.astralforge.studio/">Games</a>
-          <a class="pill" href="https://codex.astralforge.studio/">Codex</a>
-          <a class="pill" href="https://shop.astralforge.studio/">Shop</a>
-        </nav>
-      </div>
-    </header>
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="brand" href="https://astralforge.studio">
+      <img src="/assets/nav/Astral-Forge-nav.png" alt="Astral Forge">
+      <span class="brand-text">Astral Forge</span>
+    </a>
 
-    <main>
-      <section class="hero" aria-label="Astral Forge Studio">
-        <div class="headline">
-          <div class="kicker">Welcome to the Forge</div>
-          <h2>Where worlds are made<br/>and stories bite back.</h2>
-          <p>
-            Astral Forge Studio is a home for tabletop adventures: playable experiences, campaign-ready content,
-            and a living codex of lore. Choose your path below.
-          </p>
-
-          <div class="ctaRow">
-            <a class="btn primary" href="https://play.astralforge.studio/" aria-label="Go to Play">
-              ▶︎ Enter Play
-            </a>
-            <a class="btn" href="https://shop.astralforge.studio/" aria-label="Go to Shop">
-              🛒 Visit Shop
-            </a>
-            <span class="badge" title="Subdomains available">
-              <span aria-hidden="true">✦</span> portals online
-            </span>
-          </div>
-        </div>
-
-        <div class="grid" role="list" aria-label="Portals">
-          <article class="card" role="listitem">
-            <h3>Play</h3>
-            <p>Interactive experiences, tools, and “sit down and start” entry points.</p>
-            <a href="https://play.astralforge.studio/">Go to play.astralforge.studio →</a>
-          </article>
-
-          <article class="card" role="listitem">
-            <h3>Games</h3>
-            <p>Campaigns, one-shots, modules, and everything that hits the table.</p>
-            <a href="https://games.astralforge.studio/">Go to games.astralforge.studio →</a>
-          </article>
-
-          <article class="card" role="listitem">
-            <h3>Codex</h3>
-            <p>Lore, factions, relics, locations, and reference material—kept sharp.</p>
-            <a href="https://codex.astralforge.studio/">Go to codex.astralforge.studio →</a>
-          </article>
-
-          <article class="card" role="listitem">
-            <h3>Shop</h3>
-            <p>Pick up releases, bundles, and premium content forged for play.</p>
-            <a href="https://shop.astralforge.studio/">Go to shop.astralforge.studio →</a>
-          </article>
-
-          <article class="card" role="listitem">
-            <h3>Campaigns</h3>
-            <p>If you decide to dedicate a portal specifically to campaigns, link it here.</p>
-            <a href="https://campaigns.astralforge.studio/">Go to campaigns.astralforge.studio →</a>
-          </article>
-
-          <article class="card" role="listitem">
-            <h3>Status</h3>
-            <p>Simple, fast, Cloudflare-friendly HTML—no frameworks required.</p>
-            <a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;">Back to top ↑</a>
-          </article>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div class="foot">
-        <div class="small">© <span id="y"></span> Astral Forge Studio. All rights reserved.</div>
-        <div class="links" aria-label="Footer">
-          <a href="https://play.astralforge.studio/">Play</a>
-          <a href="https://games.astralforge.studio/">Games</a>
-          <a href="https://codex.astralforge.studio/">Codex</a>
-          <a href="https://shop.astralforge.studio/">Shop</a>
-        </div>
-      </div>
-    </footer>
+    <div class="nav-links">
+      <a href="https://astralforge.studio/games/">Games</a>
+      <a href="https://codex.astralforge.studio">Codex</a>
+      <a href="https://shop.astralforge.studio">Shop</a>
+      <a href="https://astralforge.studio/about/">About</a>
+      <a class="join" href="https://astralforge.studio/join/">Join</a>
+    </div>
   </div>
+</nav>
 
-  <script>
-    // tiny QoL: current year
-    document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
+<!-- HERO -->
+<section class="hero">
+  <img class="hero-image" src="/assets/hero/Play-hero.png" alt="Play at Astral Forge">
+  <div class="hero-overlay"></div>
+
+  <div class="hero-text">
+    <h1>Enter the Table</h1>
+    <h2>Your Seat Awaits</h2>
+    <p>
+      Live campaigns. Real stakes. Professional storytelling at your table.
+    </p>
+  </div>
+</section>
+
+<!-- CONTENT -->
+<main>
+
+  <section class="section">
+    <h2>Available Experiences</h2>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Open Campaigns</h3>
+        <p>New tables forming. Join a living world shaped by player decisions.</p>
+        <a class="button" href="https://astralforge.studio/contact/">Join Waitlist →</a>
+      </div>
+
+      <div class="card">
+        <h3>Private Bookings</h3>
+        <p>Custom-crafted sessions for private groups, events, and long-form campaigns.</p>
+        <a class="button" href="https://astralforge.studio/contact/">Request Session →</a>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 Astral Forge — Play</div>
+    <div class="footer-links">
+      <a href="https://astralforge.studio/legal/privacy/">Privacy</a>
+      <a href="https://astralforge.studio/legal/terms/">Terms</a>
+      <a href="https://rootapp.gg/AC05WwIOhgqvSevEYNE_4Q" target="_blank" rel="noopener">Root</a>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
