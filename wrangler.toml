@@ -1,0 +1,7 @@
+name = "astralforge-play"
+compatibility_date = "2026-03-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "astralforge_play"
+database_id = "4f2e461b-cb35-401d-ab7c-fcebc213a367"
