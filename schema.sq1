@@ -1,0 +1,34 @@
+-- campaigns are stored as JSON (so your builder can evolve without migrations)
+CREATE TABLE IF NOT EXISTS campaigns (
+  slug TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'draft', -- draft | published | archived
+  system TEXT,
+  day TEXT,
+  time TEXT,
+  mode TEXT NOT NULL DEFAULT 'open',    -- open | full
+  seats_open INTEGER DEFAULT 0,
+  seats_total INTEGER DEFAULT 0,
+  price TEXT,
+  thumb TEXT,
+  hook TEXT,
+  blurb TEXT,
+  tags_json TEXT,
+  data_json TEXT NOT NULL,              -- full campaign payload
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_campaigns_status ON campaigns(status);
+CREATE INDEX IF NOT EXISTS idx_campaigns_system ON campaigns(system);
+
+CREATE TABLE IF NOT EXISTS requests (
+  id TEXT PRIMARY KEY,
+  campaign_slug TEXT,
+  name TEXT,
+  email TEXT,
+  message TEXT,
+  created_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_requests_campaign_slug ON requests(campaign_slug);
