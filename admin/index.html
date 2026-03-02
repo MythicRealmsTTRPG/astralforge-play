@@ -1,299 +1,143 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AstralForge Admin</title>
-  <style>
-    body { font-family: system-ui, sans-serif; max-width: 980px; margin: 32px auto; padding: 0 16px; }
-    header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
-    code, pre { background:#f3f3f3; padding:2px 6px; border-radius:6px; }
-    .row { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
-    label { display:block; font-size:12px; opacity:.8; margin-bottom:4px; }
-    input, textarea, select, button { font: inherit; padding:10px 12px; border-radius:10px; border:1px solid #ddd; }
-    textarea { width: 100%; min-height: 120px; }
-    button { cursor:pointer; }
-    .card { border:1px solid #eee; border-radius:16px; padding:16px; margin:16px 0; }
-    .muted { opacity:.75; }
-    .pill { display:inline-block; padding:4px 10px; border-radius:999px; border:1px solid #ddd; font-size:12px; }
-    .danger { border-color:#ffb3b3; }
-    .ok { border-color:#b3ffcc; }
-    .grid { display:grid; grid-template-columns: 1fr; gap: 12px; }
-    @media (min-width: 860px) { .grid { grid-template-columns: 1fr 1fr; } }
-    .list { display:flex; flex-direction:column; gap:12px; }
-    .actions { display:flex; gap:8px; flex-wrap:wrap; }
-    .right { text-align:right; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astral Forge • Admin Hub</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+  body{
+    margin:0;
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    background:#0b0b0d;
+    color:rgba(255,255,255,.92);
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+    text-align:center;
+  }
+
+  header{
+    padding:40px 20px 18px;
+    background:rgba(0,0,0,.65);
+    border-bottom:1px solid rgba(255,255,255,.12);
+    box-shadow:0 4px 12px rgba(0,0,0,.5);
+  }
+  header h1{
+    margin:0;
+    font-family:"Cinzel",serif;
+    font-size:32px;
+    letter-spacing:.06em;
+    font-weight:700;
+  }
+  header p{
+    margin:6px 0 0;
+    color:rgba(255,255,255,.70);
+    font-size:16px;
+  }
+
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+    gap:24px;
+    max-width:900px;
+    margin:40px auto 60px;
+    padding:0 20px;
+  }
+  .card{
+    background:rgba(0,0,0,.32);
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:14px;
+    padding:24px;
+    box-shadow:0 8px 26px rgba(0,0,0,.45);
+    transition:.22s ease;
+    text-align:left;
+  }
+  .card:hover{
+    transform:translateY(-2px);
+    border-color:rgba(255,255,255,.28);
+  }
+  .card h2{
+    margin:0 0 8px;
+    font-size:22px;
+    font-weight:600;
+    color:rgba(255,255,255,.92);
+  }
+  .card p{
+    margin:0 0 14px;
+    color:rgba(255,255,255,.76);
+    font-size:14px;
+    line-height:1.5;
+  }
+  .card a{
+    display:inline-block;
+    padding:10px 14px;
+    font-size:14px;
+    font-weight:500;
+    color:rgba(255,255,255,.92);
+    background:rgba(185,144,84,.55);
+    border-radius:10px;
+    text-decoration:none;
+    transition:.18s;
+  }
+  .card a:hover{
+    background:rgba(185,144,84,.85);
+  }
+
+  footer{
+    margin-top:auto;
+    padding:18px 20px;
+    background:rgba(0,0,0,.65);
+    border-top:1px solid rgba(255,255,255,.12);
+    font-size:13px;
+    color:rgba(255,255,255,.64);
+  }
+</style>
+
 </head>
+
 <body>
-  <header>
-    <div>
-      <h1 style="margin:0;">AstralForge Admin</h1>
-      <div class="muted">Private campaign manager (token required)</div>
-    </div>
-    <div class="right">
-      <button id="btnSetToken">Set / Change Token</button>
-      <button id="btnClearToken" class="danger">Clear Token</button>
-    </div>
-  </header>
+
+<header>
+  <h1>Astral Forge Admin Hub</h1>
+  <p>Manage campaigns, codex, emails and more.</p>
+</header>
+
+<section class="cards">
 
   <div class="card">
-    <div class="row">
-      <div style="flex:1; min-width:260px;">
-        <label>API Base URL</label>
-        <input id="apiBase" type="url" style="width:100%;" />
-        <div class="muted" style="margin-top:6px;">
-          Default uses your Workers URL. If you later bind <code>api.astralforge.studio</code>, put it here.
-        </div>
-      </div>
-      <div>
-        <button id="btnReload">Reload Campaigns</button>
-      </div>
-      <div>
-        <span id="authStatus" class="pill">Auth: unknown</span>
-      </div>
-    </div>
+    <h2>Campaign Builder</h2>
+    <p>Create, edit, and publish campaigns for your players to explore.</p>
+    <a href="/admin/campaigns/">Open Campaign Builder</a>
   </div>
 
-  <div class="grid">
-    <div class="card">
-      <h2 style="margin-top:0;">Create campaign</h2>
-      <div class="row">
-        <div style="flex:1; min-width:240px;">
-          <label>Title</label>
-          <input id="title" type="text" placeholder="The Black Star Gambit" style="width:100%;" />
-        </div>
-        <div style="min-width:220px;">
-          <label>Slug (optional)</label>
-          <input id="slug" type="text" placeholder="the-black-star-gambit" style="width:100%;" />
-        </div>
-      </div>
-
-      <div style="margin-top:12px;">
-        <label>Description (markdown ok)</label>
-        <textarea id="description" placeholder="What is this campaign about?"></textarea>
-      </div>
-
-      <div class="row" style="margin-top:12px;">
-        <div>
-          <label>Status</label>
-          <select id="status">
-            <option value="draft" selected>draft</option>
-            <option value="published">published</option>
-            <option value="archived">archived</option>
-          </select>
-        </div>
-        <div>
-          <label>Seat capacity</label>
-          <input id="seats" type="number" min="1" value="6" />
-        </div>
-        <div style="min-width:220px;">
-          <label>Timezone</label>
-          <input id="tz" type="text" value="America/Chicago" />
-        </div>
-      </div>
-
-      <div class="row" style="margin-top:12px;">
-        <div style="flex:1; min-width:240px;">
-          <label>Start (optional, ISO)</label>
-          <input id="start_at" type="text" placeholder="2026-03-15T19:00:00-05:00" style="width:100%;" />
-        </div>
-        <div style="flex:1; min-width:240px;">
-          <label>End (optional, ISO)</label>
-          <input id="end_at" type="text" placeholder="2026-03-15T22:00:00-05:00" style="width:100%;" />
-        </div>
-      </div>
-
-      <div style="margin-top:12px;" class="actions">
-        <button id="btnCreate">Create</button>
-        <span id="createMsg" class="muted"></span>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2 style="margin-top:0;">Campaigns</h2>
-      <div id="list" class="list"></div>
-    </div>
+  <div class="card">
+    <h2>Codex Management</h2>
+    <p>Manage entries in your lore codex, monster lists, setting info, and guides.</p>
+    <a href="/admin/codex/">Open Codex Admin</a>
   </div>
 
-  <script>
-    // ---- Config ----
-    const DEFAULT_BASE = "https://astralforge-api.scalescribe-mythicrealms.workers.dev";
+  <div class="card">
+    <h2>Email Tools</h2>
+    <p>Send campaign notifications, booking messages, newsletters, and event emails.</p>
+    <a href="/admin/email/">Open Email Tools</a>
+  </div>
 
-    const $ = (id) => document.getElementById(id);
+  <div class="card">
+    <h2>View Public Site</h2>
+    <p>See the public campaign listing and site as your players do.</p>
+    <a href="/campaigns/">View Campaigns</a>
+  </div>
 
-    function getToken() {
-      return sessionStorage.getItem("AF_ADMIN_TOKEN") || "";
-    }
-    function setToken(token) {
-      sessionStorage.setItem("AF_ADMIN_TOKEN", token);
-    }
-    function clearToken() {
-      sessionStorage.removeItem("AF_ADMIN_TOKEN");
-    }
+</section>
 
-    function authHeaders() {
-      const token = getToken();
-      return token ? { "Authorization": `Bearer ${token}` } : {};
-    }
+<footer>
+  © Astral Forge — Admin Hub &nbsp; | &nbsp; <a href="/" style="color:rgba(255,255,255,.6); text-decoration:none;">Site Home</a>
+</footer>
 
-    async function apiFetch(path, opts = {}) {
-      const base = $("apiBase").value.trim().replace(/\/+$/, "");
-      const url = base + path;
-      const headers = {
-        "Content-Type": "application/json",
-        ...(opts.headers || {}),
-        ...authHeaders(),
-      };
-      const res = await fetch(url, { ...opts, headers });
-      const text = await res.text();
-      let data;
-      try { data = text ? JSON.parse(text) : null; } catch { data = { raw: text }; }
-      if (!res.ok) {
-        const msg = (data && (data.error || data.message)) ? (data.error || data.message) : `HTTP ${res.status}`;
-        throw new Error(msg);
-      }
-      return data;
-    }
-
-    function setAuthStatus(ok, msg) {
-      const el = $("authStatus");
-      el.textContent = ok ? `Auth: OK` : `Auth: ${msg || "missing"}`;
-      el.className = "pill " + (ok ? "ok" : "danger");
-    }
-
-    function campaignCard(c) {
-      const wrap = document.createElement("div");
-      wrap.className = "card";
-      wrap.innerHTML = `
-        <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start;">
-          <div style="flex:1;">
-            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-              <strong>${escapeHtml(c.title)}</strong>
-              <span class="pill">${escapeHtml(c.status)}</span>
-            </div>
-            <div class="muted" style="margin-top:6px;">
-              slug: <code>${escapeHtml(c.slug)}</code>
-              &nbsp;•&nbsp; seats: <code>${c.seat_capacity}</code>
-              &nbsp;•&nbsp; tz: <code>${escapeHtml(c.timezone || "UTC")}</code>
-            </div>
-            <div class="muted" style="margin-top:6px; font-size:12px;">
-              id: <code>${escapeHtml(c.id)}</code>
-            </div>
-          </div>
-          <div class="actions">
-            <button data-action="publish">Publish</button>
-            <button data-action="draft">Draft</button>
-            <button data-action="archive">Archive</button>
-            <button data-action="delete" class="danger">Delete</button>
-          </div>
-        </div>
-      `;
-
-      wrap.querySelectorAll("button").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const action = btn.getAttribute("data-action");
-          try {
-            if (action === "delete") {
-              if (!confirm(`Delete "${c.title}"? This cannot be undone.`)) return;
-              await apiFetch(`/api/v1/admin/campaigns/${c.id}`, { method: "DELETE" });
-            } else {
-              await apiFetch(`/api/v1/admin/campaigns/${c.id}`, {
-                method: "PATCH",
-                body: JSON.stringify({ status: action === "draft" ? "draft" : (action === "publish" ? "published" : "archived") })
-              });
-            }
-            await loadCampaigns();
-          } catch (e) {
-            alert(e.message || String(e));
-          }
-        });
-      });
-
-      return wrap;
-    }
-
-    function escapeHtml(s) {
-      return String(s ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    async function loadCampaigns() {
-      $("list").innerHTML = `<div class="muted">Loading…</div>`;
-      try {
-        const data = await apiFetch("/api/v1/admin/campaigns", { method: "GET" });
-        setAuthStatus(true);
-        const list = $("list");
-        list.innerHTML = "";
-        (data.campaigns || []).forEach(c => list.appendChild(campaignCard(c)));
-        if (!data.campaigns || data.campaigns.length === 0) {
-          list.innerHTML = `<div class="muted">No campaigns yet.</div>`;
-        }
-      } catch (e) {
-        setAuthStatus(false, e.message);
-        $("list").innerHTML = `<div class="muted">Cannot load campaigns: ${escapeHtml(e.message)}</div>`;
-      }
-    }
-
-    async function createCampaign() {
-      $("createMsg").textContent = "";
-      const body = {
-        title: $("title").value.trim(),
-        slug: $("slug").value.trim() || undefined,
-        description: $("description").value,
-        status: $("status").value,
-        seat_capacity: parseInt($("seats").value || "6", 10),
-        timezone: $("tz").value.trim() || "UTC",
-        start_at: $("start_at").value.trim() || null,
-        end_at: $("end_at").value.trim() || null,
-      };
-
-      try {
-        const data = await apiFetch("/api/v1/admin/campaigns", {
-          method: "POST",
-          body: JSON.stringify(body),
-        });
-        $("createMsg").textContent = `Created: ${data.slug}`;
-        $("title").value = "";
-        $("slug").value = "";
-        $("description").value = "";
-        $("start_at").value = "";
-        $("end_at").value = "";
-        await loadCampaigns();
-      } catch (e) {
-        $("createMsg").textContent = `Error: ${e.message}`;
-      }
-    }
-
-    // ---- UI wiring ----
-    $("apiBase").value = localStorage.getItem("AF_API_BASE") || DEFAULT_BASE;
-    $("apiBase").addEventListener("change", () => {
-      localStorage.setItem("AF_API_BASE", $("apiBase").value.trim());
-    });
-
-    $("btnSetToken").addEventListener("click", () => {
-      const token = prompt("Paste your ADMIN token (stored only in this tab session):", getToken() || "");
-      if (token === null) return;
-      if (!token.trim()) { clearToken(); setAuthStatus(false, "missing"); return; }
-      setToken(token.trim());
-      loadCampaigns();
-    });
-
-    $("btnClearToken").addEventListener("click", () => {
-      clearToken();
-      setAuthStatus(false, "missing");
-      loadCampaigns();
-    });
-
-    $("btnReload").addEventListener("click", loadCampaigns);
-    $("btnCreate").addEventListener("click", createCampaign);
-
-    // initial load
-    loadCampaigns();
-  </script>
 </body>
 </html>
