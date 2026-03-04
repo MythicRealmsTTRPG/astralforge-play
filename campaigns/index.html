@@ -434,8 +434,10 @@
 
 <script>
   // ===== CONFIG =====
-  // This must point at your working API domain (the one that returns ok:true in your screenshot).
-  const API_BASE = "https://astralforge.studio";
+  // Public campaigns API lives on your Worker, not astralforge.studio.
+  const API_BASE =
+    (localStorage.getItem("af_api_base_public") || "https://astralforge-api.scalescribe-mythicrealms.workers.dev")
+      .replace(/\/+$/, "");
   const LIST_ENDPOINT = `${API_BASE}/api/v1/campaigns`;
 
   // ===== STATE =====
@@ -463,12 +465,23 @@
     elNotice.style.display = "none";
   }
 
+  function seatNums(c){
+    const open = Number(c.seats_open ?? c.seatsOpen ?? c.booking?.seatsOpen ?? 0);
+    const total = Number(c.seats_total ?? c.seatsTotal ?? c.booking?.seatsTotal ?? 0);
+    return { open: Number.isFinite(open) ? open : 0, total: Number.isFinite(total) ? total : 0 };
+  }
+
   function seatMode(c){
-    // Prefer computed mode from seats
-    const open = Number(c.seats_open ?? c.seatsOpen ?? 0);
-    const total = Number(c.seats_total ?? c.seatsTotal ?? 0);
-    if (total > 0 && open <= 0) return "full";
-    return (open > 0) ? "open" : (String(c.mode || "open"));
+    const { open, total } = seatNums(c);
+
+    // If we know totals, "full" means no open seats.
+    if (total > 0) return (open > 0) ? "open" : "full";
+
+    // If totals are missing but open seats is known and > 0, treat as open.
+    if (open > 0) return "open";
+
+    // Default conservative: treat unknown/0 as full so you don't advertise seats incorrectly.
+    return "full";
   }
 
   function render(list){
@@ -477,11 +490,12 @@
     elEmpty.style.display = list.length ? "none" : "block";
 
     for (const c of list){
-      const slug = c.slug;
+      const slug = c.slug || c.data_json?.slug || "";
+      if (!slug) continue;
+
       const detailsHref = `/campaigns/${encodeURIComponent(slug)}/`;
 
-      const open = Number(c.seats_open ?? 0);
-      const total = Number(c.seats_total ?? 0);
+      const { open, total } = seatNums(c);
       const mode = seatMode(c);
 
       const card = document.createElement("article");
@@ -489,39 +503,57 @@
 
       const thumb = document.createElement("div");
       thumb.className = "thumb";
-      if (c.thumb) {
+
+      const thumbUrl =
+        c.thumb ||
+        c.image?.path ||
+        c.data_json?.image?.path ||
+        c.data_json?.seo?.image ||
+        "";
+
+      if (thumbUrl) {
         thumb.style.backgroundImage =
-          `radial-gradient(circle at 25% 20%, rgba(255,255,255,.08), rgba(0,0,0,.65)), url("${c.thumb}")`;
+          `radial-gradient(circle at 25% 20%, rgba(255,255,255,.08), rgba(0,0,0,.65)), url("${thumbUrl}")`;
       }
       card.appendChild(thumb);
 
       const body = document.createElement("div");
       body.className = "body";
 
+      const sys = c.system || c.data_json?.basic?.system || "—";
+      const dayText = c.day || "—";
+      const timeText = c.time || "—";
+      const priceText = c.price || c.data_json?.pricing?.price || "—";
+
       const meta = document.createElement("div");
       meta.className = "meta";
       meta.innerHTML = `
-        <span class="pill">${c.system || "—"}</span>
-        <span class="pill">${(c.day || "—")} • ${(c.time || "—")}</span>
+        <span class="pill">${sys}</span>
+        <span class="pill">${dayText} • ${timeText}</span>
         <span class="pill gold">${mode === "open" ? "Open Seats" : "Full / Waitlist"}</span>
       `;
       body.appendChild(meta);
 
       const title = document.createElement("h3");
       title.className = "title";
-      title.textContent = c.title || slug;
+      title.textContent = c.title || c.data_json?.basic?.title || slug;
       body.appendChild(title);
 
       const desc = document.createElement("p");
       desc.className = "desc";
-      desc.textContent = c.blurb || c.hook || "";
+      desc.textContent =
+        c.blurb ||
+        c.hook ||
+        c.description ||
+        c.data_json?.basic?.hook ||
+        "";
       body.appendChild(desc);
 
       const row = document.createElement("div");
       row.className = "row";
       row.innerHTML = `
         <div><strong>${open}</strong> / ${total || "—"} seats</div>
-        <div><strong>${c.price || "—"}</strong></div>
+        <div><strong>${priceText}</strong></div>
       `;
       body.appendChild(row);
 
@@ -546,18 +578,30 @@
 
     const filtered = campaigns.filter(c => {
       const hay = normalize([
-        c.title, c.system, c.day, c.time, c.hook, c.blurb, c.slug
+        c.title, c.system, c.day, c.time, c.hook, c.blurb, c.slug,
+        c.data_json?.basic?.title, c.data_json?.basic?.system, c.data_json?.basic?.hook
       ].join(" "));
 
       if (qv && !hay.includes(qv)) return false;
-      if (sys && (c.system || "") !== sys) return false;
-      if (dv && (c.day || "") !== dv) return false;
+
+      const sysVal = c.system || c.data_json?.basic?.system || "";
+      if (sys && sysVal !== sys) return false;
+
+      const dayVal = c.day || "";
+      if (dv && dayVal !== dv) return false;
 
       const mode = seatMode(c);
       if (sv === "open" && mode !== "open") return false;
       if (sv === "full" && mode !== "full") return false;
 
       return true;
+    });
+
+    // Nice default: open seats first.
+    filtered.sort((a,b) => {
+      const am = seatMode(a), bm = seatMode(b);
+      if (am === bm) return 0;
+      return am === "open" ? -1 : 1;
     });
 
     render(filtered);
@@ -569,12 +613,18 @@
       const res = await fetch(LIST_ENDPOINT, { method: "GET" });
       const data = await res.json().catch(() => ({}));
 
-      if (!res.ok || !data.ok){
+      if (!res.ok || data.ok === false){
         throw new Error(data.error || `HTTP ${res.status}`);
       }
 
+      const list =
+        Array.isArray(data.campaigns) ? data.campaigns :
+        Array.isArray(data.items) ? data.items :
+        Array.isArray(data.data) ? data.data :
+        Array.isArray(data) ? data :
+        [];
+
       // Only show live/published on public site.
-      const list = Array.isArray(data.campaigns) ? data.campaigns : [];
       campaigns = list.filter(c => {
         const s = String(c.status || "").toLowerCase();
         return s === "live" || s === "published";
