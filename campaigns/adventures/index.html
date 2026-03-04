@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Astral Forge • Campaign</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#0b0b0d; --text:rgba(255,255,255,.92); --border:rgba(255,255,255,.12); --panel:rgba(0,0,0,.35); --gold:#b99054; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text); }
+  .wrap{ max-width:1000px; margin:0 auto; padding:40px 18px 70px; }
+  .card{ border:1px solid var(--border); background:var(--panel); border-radius:16px; overflow:hidden; }
+  .hero{ height:260px; background: radial-gradient(circle at 25% 20%, rgba(255,255,255,.08), rgba(0,0,0,.65)); background-size:cover; background-position:center; border-bottom:1px solid var(--border); }
+  .body{ padding:18px; }
+  h1{ margin:0 0 8px; font-family:Georgia,serif; letter-spacing:.02em; }
+  .meta{ display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 14px; color:rgba(255,255,255,.75); font-size:12px; text-transform:uppercase; letter-spacing:.10em; }
+  .pill{ border:1px solid rgba(255,255,255,.16); background:rgba(0,0,0,.25); padding:6px 8px; border-radius:999px; }
+  .pill.gold{ border-color: rgba(185,144,84,.55); }
+  .desc{ line-height:1.75; color:rgba(255,255,255,.82); white-space:pre-wrap; }
+  .row{ display:flex; justify-content:space-between; gap:12px; margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,.10); color:rgba(255,255,255,.78); }
+  .actions{ display:flex; gap:10px; margin-top:14px; }
+  .btn{ flex:1; text-align:center; padding:10px 12px; border-radius:12px; text-decoration:none; border:1px solid rgba(255,255,255,.18); color:rgba(255,255,255,.90); background:rgba(0,0,0,.20); }
+  .btn.primary{ border-color: rgba(185,144,84,.55); background: linear-gradient(135deg, rgba(185,144,84,.18), rgba(0,0,0,.12)); }
+  .notice{ border:1px solid rgba(255,255,255,.12); background:rgba(0,0,0,.35); border-radius:14px; padding:12px 14px; color:rgba(255,255,255,.80); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="notice" class="notice">Loading…</div>
+
+    <div id="card" class="card" style="display:none;">
+      <div id="hero" class="hero"></div>
+      <div class="body">
+        <h1 id="title"></h1>
+        <div class="meta" id="meta"></div>
+        <div class="desc" id="desc"></div>
+
+        <div class="row" id="row"></div>
+
+        <div class="actions">
+          <a class="btn" href="/campaigns/">Back</a>
+          <a class="btn primary" href="https://astralforge.studio/contact/" target="_blank" rel="noopener">Request</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const API_BASE = "https://astralforge.studio";
+
+  function getSlug(){
+    const parts = location.pathname.split("/").filter(Boolean); // ["campaigns","black-star-gambit"]
+    const idx = parts.indexOf("campaigns");
+    return (idx >= 0 && parts[idx+1]) ? decodeURIComponent(parts[idx+1]) : "";
+  }
+
+  function setNotice(msg){
+    const n = document.getElementById("notice");
+    n.textContent = msg;
+    n.style.display = "block";
+  }
+
+  function showCard(){
+    document.getElementById("notice").style.display = "none";
+    document.getElementById("card").style.display = "block";
+  }
+
+  async function load(){
+    const slug = getSlug();
+    if (!slug){
+      setNotice("Missing campaign slug.");
+      return;
+    }
+
+    try{
+      const url = `${API_BASE}/api/v1/campaigns/${encodeURIComponent(slug)}`;
+      const res = await fetch(url);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
+
+      const c = data.campaign;
+
+      document.title = `Astral Forge • ${c.title || slug}`;
+      document.getElementById("title").textContent = c.title || slug;
+
+      if (c.thumb){
+        document.getElementById("hero").style.backgroundImage =
+          `radial-gradient(circle at 25% 20%, rgba(255,255,255,.08), rgba(0,0,0,.65)), url("${c.thumb}")`;
+      }
+
+      const open = Number(c.seats_open ?? 0);
+      const total = Number(c.seats_total ?? 0);
+      const mode = (total > 0 && open <= 0) ? "Full / Waitlist" : "Open Seats";
+
+      document.getElementById("meta").innerHTML = `
+        <span class="pill">${c.system || "—"}</span>
+        <span class="pill">${(c.day || "—")} • ${(c.time || "—")}</span>
+        <span class="pill gold">${mode}</span>
+      `;
+
+      document.getElementById("desc").textContent = c.data_json || c.blurb || c.hook || "";
+
+      document.getElementById("row").innerHTML = `
+        <div><strong>${open}</strong> / ${total || "—"} seats</div>
+        <div><strong>${c.price || "—"}</strong></div>
+      `;
+
+      showCard();
+    }catch(err){
+      setNotice(`Couldn’t load this campaign. (${String(err.message || err)})`);
+    }
+  }
+
+  load();
+</script>
+</body>
+</html>
