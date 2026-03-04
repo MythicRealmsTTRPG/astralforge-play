@@ -1,0 +1,3 @@
+/campaigns            /campaigns/               301
+/campaigns/           /campaigns/index.html     200
+/campaigns/*          /campaigns/campaign.html  200
