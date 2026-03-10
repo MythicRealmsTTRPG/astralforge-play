@@ -13,53 +13,69 @@
     --text:rgba(255,255,255,.92);
     --muted:rgba(255,255,255,.72);
     --border:rgba(255,255,255,.12);
+    --border-2:rgba(255,255,255,.18);
     --panel:rgba(0,0,0,.28);
     --panel2:rgba(0,0,0,.38);
     --gold:#b99054;
     --shadow:rgba(0,0,0,.65);
+    --ring:rgba(255,255,255,.24);
   }
 
   *{ box-sizing:border-box; }
+
   body{
     margin:0;
-    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
   }
+
+  a{ color:inherit; }
+  img{ max-width:100%; display:block; }
+  button,input,select{ font:inherit; }
 
   nav{
     position:fixed;
     top:0; left:0; right:0;
     z-index:1000;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    background: rgba(0,0,0,.65);
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 6px 30px rgba(0,0,0,.45);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    background:rgba(0,0,0,.65);
+    border-bottom:1px solid var(--border);
+    box-shadow:0 6px 30px rgba(0,0,0,.45);
   }
+
   .nav-inner{
-    padding: 14px 40px;
+    padding:14px 40px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap: 18px;
+    gap:18px;
   }
+
   .brand{
     display:flex;
     align-items:center;
     gap:12px;
     text-decoration:none;
-    color: var(--text);
+    color:var(--text);
     white-space:nowrap;
   }
-  .brand img{ height:38px; width:auto; display:block; }
+
+  .brand img{
+    height:38px;
+    width:auto;
+    display:block;
+  }
+
   .brand-text{
-    font-family: "Cinzel", serif;
+    font-family:"Cinzel",serif;
     font-weight:600;
     letter-spacing:.12em;
     font-size:13px;
-    text-transform: uppercase;
+    text-transform:uppercase;
   }
+
   .nav-links{
     display:flex;
     gap:18px;
@@ -67,276 +83,479 @@
     flex-wrap:wrap;
     justify-content:flex-end;
   }
-  .nav-links a{
+
+  .nav-links > a,
+  .nav-links > button,
+  .nav-account-trigger{
     text-decoration:none;
-    color: rgba(255,255,255,.82);
+    color:rgba(255,255,255,.82);
     font-size:14px;
     padding:8px 12px;
     border-radius:10px;
     transition:.2s;
     white-space:nowrap;
+    background:none;
+    border:0;
+    cursor:pointer;
   }
-  .nav-links a:hover{
-    color: rgba(255,255,255,.96);
-    background: rgba(255,255,255,.06);
+
+  .nav-links > a:hover,
+  .nav-links > button:hover,
+  .nav-account-trigger:hover{
+    color:rgba(255,255,255,.96);
+    background:rgba(255,255,255,.06);
   }
+
+  .nav-links a[aria-current="page"]{
+    color:rgba(255,255,255,.96);
+    background:rgba(255,255,255,.08);
+  }
+
   .nav-links a.cta{
-    border: 1px solid rgba(185,144,84,.55);
-    background: linear-gradient(135deg, rgba(185,144,84,.18), rgba(0,0,0,.12));
-    box-shadow: 0 10px 30px rgba(185,144,84,.12);
+    border:1px solid rgba(185,144,84,.55);
+    background:linear-gradient(135deg, rgba(185,144,84,.18), rgba(0,0,0,.12));
+    box-shadow:0 10px 30px rgba(185,144,84,.12);
   }
+
   .nav-links a.cta:hover{
-    border-color: rgba(185,144,84,.85);
-    transform: translateY(-1px);
+    border-color:rgba(185,144,84,.85);
+    transform:translateY(-1px);
+  }
+
+  .nav-account{
+    position:relative;
+  }
+
+  .login-popover{
+    position:absolute;
+    top:calc(100% + 12px);
+    right:0;
+    width:min(360px,92vw);
+    z-index:1100;
+  }
+
+  .login-popover[hidden]{
+    display:none;
+  }
+
+  .login-popover-inner{
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:18px;
+    background:rgba(10,10,10,.97);
+    backdrop-filter:blur(14px);
+    box-shadow:0 20px 60px rgba(0,0,0,.5);
+    padding:18px;
+  }
+
+  .login-popover-inner h3{
+    margin:0 0 14px;
+    font-family:"Cinzel",serif;
+    font-size:18px;
+    color:rgba(255,255,255,.96);
+  }
+
+  .login-form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .login-form label{
+    font-size:12px;
+    color:rgba(255,255,255,.84);
+  }
+
+  .login-form input{
+    width:100%;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.06);
+    color:rgba(255,255,255,.95);
+    outline:none;
+  }
+
+  .login-form input::placeholder{
+    color:rgba(255,255,255,.42);
+  }
+
+  .login-form input:focus{
+    border-color:rgba(255,255,255,.26);
+    box-shadow:0 0 0 3px rgba(255,255,255,.08);
+  }
+
+  .login-actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:6px;
+  }
+
+  .login-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:10px 14px;
+    border-radius:999px;
+    border:1px solid var(--border-2);
+    background:rgba(255,255,255,.14);
+    color:#fff;
+    text-decoration:none;
+    font-size:13.5px;
+    transition:.15s ease;
+    cursor:pointer;
+  }
+
+  .login-btn:hover{
+    background:rgba(255,255,255,.18);
+  }
+
+  .btn-link{
+    font-size:13px;
+    color:rgba(255,255,255,.78);
+    text-decoration:none;
+  }
+
+  .btn-link:hover{
+    color:#fff;
+  }
+
+  .login-links{
+    margin-top:2px;
+  }
+
+  .login-links a{
+    padding:0;
+    border-radius:0;
+    font-size:12.5px;
+    color:rgba(255,255,255,.70);
+    text-decoration:none;
+  }
+
+  .login-links a:hover{
+    background:none;
+    color:#fff;
+  }
+
+  .login-note{
+    margin-top:10px;
+    font-size:11.5px;
+    line-height:1.5;
+    color:rgba(255,255,255,.55);
   }
 
   .hero{
-    padding-top: 86px; /* nav offset */
+    padding-top:86px;
     background:
       radial-gradient(1200px 600px at 20% 10%, rgba(185,144,84,.08), transparent 55%),
       radial-gradient(900px 500px at 85% 0%, rgba(255,255,255,.05), transparent 60%),
       linear-gradient(rgba(0,0,0,.15), rgba(0,0,0,.45)),
       url("/assets/backgrounds/Astral-Forge.png") center / cover no-repeat fixed;
   }
+
   .hero-inner{
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 54px 20px 26px;
+    max-width:1200px;
+    margin:0 auto;
+    padding:54px 20px 26px;
   }
+
   .kicker{
     letter-spacing:.22em;
-    text-transform: uppercase;
+    text-transform:uppercase;
     font-weight:600;
     font-size:12px;
-    color: rgba(255,255,255,.70);
+    color:rgba(255,255,255,.70);
   }
+
   h1{
     margin:10px 0 8px;
-    font-family: Georgia, serif;
-    font-size: clamp(34px, 4vw, 54px);
+    font-family:Georgia,serif;
+    font-size:clamp(34px, 4vw, 54px);
     letter-spacing:.02em;
   }
+
   .sub{
-    margin: 0;
-    max-width: 90ch;
-    color: rgba(255,255,255,.78);
-    line-height: 1.7;
-    font-size: 16px;
+    margin:0;
+    max-width:90ch;
+    color:rgba(255,255,255,.78);
+    line-height:1.7;
+    font-size:16px;
   }
 
   .controls{
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 18px 20px 18px;
+    max-width:1200px;
+    margin:0 auto;
+    padding:18px 20px 18px;
     display:grid;
-    grid-template-columns: 1.2fr .8fr .8fr .8fr;
-    gap: 12px;
+    grid-template-columns:1.2fr .8fr .8fr .8fr;
+    gap:12px;
   }
+
   .control{
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 12px 12px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:12px 12px;
   }
+
   .control label{
     display:block;
-    font-size: 12px;
-    color: rgba(255,255,255,.65);
+    font-size:12px;
+    color:rgba(255,255,255,.65);
     letter-spacing:.12em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
+    text-transform:uppercase;
+    margin-bottom:8px;
   }
+
   input[type="search"], select{
     width:100%;
-    background: rgba(0,0,0,.25);
-    color: var(--text);
-    border: 1px solid rgba(255,255,255,.14);
-    border-radius: 12px;
-    padding: 10px 12px;
-    outline: none;
+    background:rgba(0,0,0,.25);
+    color:var(--text);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:12px;
+    padding:10px 12px;
+    outline:none;
   }
-  input[type="search"]::placeholder{ color: rgba(255,255,255,.45); }
-  select{ cursor:pointer; }
+
+  input[type="search"]::placeholder{
+    color:rgba(255,255,255,.45);
+  }
+
+  select{
+    cursor:pointer;
+  }
 
   .stage{
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 14px 20px 70px;
+    max-width:1200px;
+    margin:0 auto;
+    padding:14px 20px 70px;
   }
 
   .notice{
-    background: rgba(0,0,0,.35);
-    border: 1px solid rgba(255,255,255,.12);
-    border-radius: 14px;
-    padding: 12px 14px;
-    color: rgba(255,255,255,.78);
+    background:rgba(0,0,0,.35);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:14px;
+    padding:12px 14px;
+    color:rgba(255,255,255,.78);
     display:none;
-    margin: 0 0 14px;
-    line-height: 1.6;
+    margin:0 0 14px;
+    line-height:1.6;
   }
-  .notice code{ color: rgba(255,255,255,.92); }
+
+  .notice code{
+    color:rgba(255,255,255,.92);
+  }
 
   .count-row{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap: 12px;
-    margin: 6px 0 16px;
-    color: rgba(255,255,255,.70);
-    font-size: 14px;
+    gap:12px;
+    margin:6px 0 16px;
+    color:rgba(255,255,255,.70);
+    font-size:14px;
   }
 
   .grid{
     display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
+    grid-template-columns:repeat(3, 1fr);
+    gap:14px;
   }
 
   .card{
-    border: 1px solid rgba(255,255,255,.14);
-    background: rgba(0,0,0,.28);
-    border-radius: 16px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(0,0,0,.28);
+    border-radius:16px;
     overflow:hidden;
-    box-shadow: 0 18px 48px rgba(0,0,0,.35);
-    transition: .18s ease;
+    box-shadow:0 18px 48px rgba(0,0,0,.35);
+    transition:.18s ease;
     display:flex;
     flex-direction:column;
-    min-height: 360px;
+    min-height:360px;
   }
+
   .card:hover{
-    transform: translateY(-4px);
-    border-color: rgba(255,255,255,.22);
+    transform:translateY(-4px);
+    border-color:rgba(255,255,255,.22);
   }
 
   .thumb{
-    height: 150px;
+    height:150px;
     background:
       radial-gradient(circle at 25% 20%, rgba(255,255,255,.08), rgba(0,0,0,.65)),
       url("/assets/adventures/placeholder.jpg") center / cover no-repeat;
-    border-bottom: 1px solid rgba(255,255,255,.10);
+    border-bottom:1px solid rgba(255,255,255,.10);
   }
 
   .body{
-    padding: 16px 16px 14px;
+    padding:16px 16px 14px;
     display:flex;
     flex-direction:column;
-    gap: 10px;
+    gap:10px;
     flex:1;
   }
 
   .meta{
     display:flex;
     flex-wrap:wrap;
-    gap: 8px;
+    gap:8px;
     align-items:center;
-    color: rgba(255,255,255,.68);
-    font-size: 12px;
+    color:rgba(255,255,255,.68);
+    font-size:12px;
     letter-spacing:.10em;
-    text-transform: uppercase;
+    text-transform:uppercase;
   }
+
   .pill{
-    border: 1px solid rgba(255,255,255,.16);
-    background: rgba(0,0,0,.22);
-    padding: 6px 8px;
-    border-radius: 999px;
+    border:1px solid rgba(255,255,255,.16);
+    background:rgba(0,0,0,.22);
+    padding:6px 8px;
+    border-radius:999px;
   }
+
   .pill.gold{
-    border-color: rgba(185,144,84,.55);
-    background: linear-gradient(135deg, rgba(185,144,84,.16), rgba(0,0,0,.14));
+    border-color:rgba(185,144,84,.55);
+    background:linear-gradient(135deg, rgba(185,144,84,.16), rgba(0,0,0,.14));
   }
 
   .title{
-    margin: 0;
-    font-family: Georgia, serif;
-    font-size: 20px;
+    margin:0;
+    font-family:Georgia,serif;
+    font-size:20px;
     letter-spacing:.02em;
   }
 
   .desc{
     margin:0;
-    color: rgba(255,255,255,.76);
-    line-height: 1.65;
-    font-size: 14px;
-    white-space: pre-line;
+    color:rgba(255,255,255,.76);
+    line-height:1.65;
+    font-size:14px;
+    white-space:pre-line;
   }
 
   .row{
     display:flex;
     justify-content:space-between;
     gap:10px;
-    color: rgba(255,255,255,.72);
-    font-size: 14px;
+    color:rgba(255,255,255,.72);
+    font-size:14px;
     margin-top:auto;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,.10);
+    padding-top:10px;
+    border-top:1px solid rgba(255,255,255,.10);
   }
-  .row strong{ color: rgba(255,255,255,.92); font-weight:600; }
+
+  .row strong{
+    color:rgba(255,255,255,.92);
+    font-weight:600;
+  }
 
   .actions{
     display:flex;
     gap:10px;
-    margin-top: 12px;
+    margin-top:12px;
   }
+
   .btn{
     flex:1;
     text-align:center;
-    padding: 10px 12px;
-    border-radius: 12px;
+    padding:10px 12px;
+    border-radius:12px;
     text-decoration:none;
-    border: 1px solid rgba(255,255,255,.18);
-    color: rgba(255,255,255,.90);
-    background: rgba(0,0,0,.20);
-    transition: .18s;
-    font-size: 14px;
+    border:1px solid rgba(255,255,255,.18);
+    color:rgba(255,255,255,.90);
+    background:rgba(0,0,0,.20);
+    transition:.18s;
+    font-size:14px;
   }
-  .btn:hover{ background: rgba(255,255,255,.06); }
+
+  .btn:hover{
+    background:rgba(255,255,255,.06);
+  }
+
   .btn.primary{
-    border-color: rgba(185,144,84,.55);
-    background: linear-gradient(135deg, rgba(185,144,84,.18), rgba(0,0,0,.12));
+    border-color:rgba(185,144,84,.55);
+    background:linear-gradient(135deg, rgba(185,144,84,.18), rgba(0,0,0,.12));
   }
-  .btn.primary:hover{ border-color: rgba(185,144,84,.85); transform: translateY(-1px); }
+
+  .btn.primary:hover{
+    border-color:rgba(185,144,84,.85);
+    transform:translateY(-1px);
+  }
 
   .empty{
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 22px;
-    color: rgba(255,255,255,.75);
-    line-height: 1.7;
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:22px;
+    color:rgba(255,255,255,.75);
+    line-height:1.7;
     display:none;
   }
 
   footer{
-    background: rgba(0,0,0,.75);
-    border-top: 1px solid var(--border);
+    background:rgba(0,0,0,.75);
+    border-top:1px solid var(--border);
   }
+
   .footer-inner{
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 18px 20px;
+    max-width:1200px;
+    margin:0 auto;
+    padding:18px 20px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap: 18px;
-    color: rgba(255,255,255,.72);
-    font-size: 14px;
+    gap:18px;
+    color:rgba(255,255,255,.72);
+    font-size:14px;
   }
-  .footer-inner a{
-    color: rgba(255,255,255,.78);
-    text-decoration:none;
-    margin-left: 14px;
-  }
-  .footer-inner a:hover{ color: rgba(255,255,255,.95); }
 
-  @media (max-width: 980px){
-    .nav-inner{ padding: 14px 18px; }
-    .controls{ grid-template-columns: 1fr 1fr; }
-    .grid{ grid-template-columns: 1fr 1fr; }
+  .footer-links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
   }
-  @media (max-width: 640px){
-    .controls{ grid-template-columns: 1fr; }
-    .grid{ grid-template-columns: 1fr; }
-    .count-row{ align-items:flex-start; flex-direction:column; }
+
+  .footer-inner a{
+    color:rgba(255,255,255,.78);
+    text-decoration:none;
+  }
+
+  .footer-inner a:hover{
+    color:rgba(255,255,255,.95);
+  }
+
+  @media (max-width:980px){
+    .nav-inner{ padding:14px 18px; }
+    .controls{ grid-template-columns:1fr 1fr; }
+    .grid{ grid-template-columns:1fr 1fr; }
+  }
+
+  @media (max-width:700px){
+    .nav-inner{
+      flex-direction:column;
+      align-items:flex-start;
+    }
+
+    .nav-links{
+      width:100%;
+      justify-content:flex-start;
+    }
+
+    .login-popover{
+      left:0;
+      right:auto;
+      width:min(100vw - 36px,420px);
+    }
+  }
+
+  @media (max-width:640px){
+    .controls{ grid-template-columns:1fr; }
+    .grid{ grid-template-columns:1fr; }
+    .count-row{
+      align-items:flex-start;
+      flex-direction:column;
+    }
   }
 </style>
 </head>
@@ -351,9 +570,64 @@
     </a>
 
     <div class="nav-links">
-      <a href="/adventures/" aria-current="page">Adventures</a>
-      <a href="/#private">Private Bookings</a>
-      <a class="cta" href="https://astralforge.studio/membership/" target="_blank" rel="noopener">Join</a>
+      <a href="https://codex.astralforge.studio" target="_blank" rel="noopener noreferrer">Codex</a>
+      <a href="https://shop.astralforge.studio" target="_blank" rel="noopener noreferrer">Shop</a>
+
+      <div class="nav-account">
+        <button
+          type="button"
+          class="nav-account-trigger"
+          id="loginTrigger"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          aria-controls="loginPopover"
+        >
+          Login
+        </button>
+
+        <div class="login-popover" id="loginPopover" role="dialog" aria-labelledby="loginTitle" hidden>
+          <div class="login-popover-inner">
+            <h3 id="loginTitle">Sign In</h3>
+
+            <form action="https://astralforge.studio/login/" method="post" class="login-form">
+              <label for="login-email">Username or Email</label>
+              <input
+                id="login-email"
+                name="email"
+                type="email"
+                autocomplete="username"
+                placeholder="you@domain.com"
+                required
+              >
+
+              <label for="login-password">Password</label>
+              <input
+                id="login-password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Your password"
+                required
+              >
+
+              <div class="login-actions">
+                <button type="submit" class="login-btn">Login</button>
+                <a href="https://astralforge.studio/signup/" class="btn-link">Create account</a>
+              </div>
+
+              <div class="login-links">
+                <a href="https://accounts.astralforge.studio/forgot-password/">Forgot password?</a>
+              </div>
+
+              <div class="login-note">
+                By signing in you agree to the <a href="https://astralforge.studio/legal/terms/">Terms</a> and <a href="https://astralforge.studio/legal/privacy/">Privacy Policy</a>.
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <a class="cta" href="https://astralforge.studio/signup/">Forge Pass</a>
     </div>
   </div>
 </nav>
@@ -419,29 +693,27 @@
   <section class="grid" id="grid" aria-label="Adventure list"></section>
 
   <div class="empty" id="empty">
-    No adventures match those filters. Try clearing filters or searching for a vibe (e.g. “beginner”, “political intrigue”, “horror”).
+    No adventures match those filters. Try clearing filters or searching for a vibe like “beginner,” “political intrigue,” or “horror.”
   </div>
 </main>
 
 <footer>
   <div class="footer-inner">
-    <div>© 2026 Astral Forge</div>
-    <div>
-      <a href="https://astralforge.studio/contact/" target="_blank" rel="noopener">Contact</a>
-      <a href="https://astralforge.studio/legal/privacy/" target="_blank" rel="noopener">Privacy</a>
-      <a href="https://astralforge.studio/legal/terms/" target="_blank" rel="noopener">Terms</a>
+    <div>© 2026 Astral Forge — Play</div>
+    <div class="footer-links">
+      <a href="https://astralforge.studio/about/" target="_blank" rel="noopener noreferrer">About</a>
+      <a href="https://astralforge.studio/reviews/" target="_blank" rel="noopener noreferrer">Reviews</a>
+      <a href="https://astralforge.studio/legal/privacy/" target="_blank" rel="noopener noreferrer">Privacy</a>
+      <a href="https://astralforge.studio/legal/terms/" target="_blank" rel="noopener noreferrer">Terms</a>
+      <a href="https://rootapp.gg/AC05WwIOhgqvSevEYNE_4Q" target="_blank" rel="noopener noreferrer">Root</a>
     </div>
   </div>
 </footer>
 
 <script>
-  // ===== CONFIG =====
-  // If your API is still on astralforge.studio, keep it.
-  // If you move the API to play.astralforge.studio, change API_BASE accordingly.
   const API_BASE = "https://astralforge.studio/api".replace(/\/+$/, "");
   const LIST_ENDPOINT = `${API_BASE}/api/v1/campaigns`;
 
-  // ===== ELEMENTS =====
   const elGrid = document.getElementById("grid");
   const elCount = document.getElementById("count");
   const elEmpty = document.getElementById("empty");
@@ -452,7 +724,6 @@
   const day = document.getElementById("day");
   const seats = document.getElementById("seats");
 
-  // ===== STATE =====
   let campaigns = [];
 
   function normalize(s){ return (s || "").toLowerCase(); }
@@ -463,6 +734,7 @@
     elNotice.innerHTML = html;
     elNotice.style.display = "block";
   }
+
   function hideNotice(){
     elNotice.innerHTML = "";
     elNotice.style.display = "none";
@@ -488,7 +760,6 @@
     }
   }
 
-  // ✅ Fix: prevent placeholder/bad slugs from generating /adventures/adventure/
   function isValidSlug(slug){
     const s = asText(slug).trim();
     if (!s) return false;
@@ -501,7 +772,6 @@
     ]);
     if (blocked.has(lowered)) return false;
 
-    // typical slug charset (adjust if you need underscores)
     return /^[a-z0-9][a-z0-9-]{1,}$/i.test(s);
   }
 
@@ -552,8 +822,6 @@
       blurb: asText(row.blurb || hook),
       tags: parseTags(row),
       updatedAt: asText(row.updated_at || row.updatedAt || ""),
-
-      // ✅ New details URL path
       detailsUrl: slugValid ? `/adventures/${encodeURIComponent(slug)}/` : "",
     };
   }
@@ -610,14 +878,13 @@
       const actions = document.createElement("div");
       actions.className = "actions";
 
-      // ✅ If slug is invalid, don't send people to /adventures/adventure/
       const viewHref = c.slugValid ? c.detailsUrl : "https://astralforge.studio/contact/";
       const viewText = c.slugValid ? "View" : "Request Info";
-      const viewAttrs = c.slugValid ? "" : 'target="_blank" rel="noopener"';
+      const viewAttrs = c.slugValid ? "" : 'target="_blank" rel="noopener noreferrer"';
 
       actions.innerHTML = `
         <a class="btn" href="${viewHref}" ${viewAttrs}>${viewText}</a>
-        <a class="btn primary" href="https://astralforge.studio/contact/" target="_blank" rel="noopener">Request</a>
+        <a class="btn primary" href="https://astralforge.studio/contact/" target="_blank" rel="noopener noreferrer">Request</a>
       `;
       body.appendChild(actions);
 
@@ -633,7 +900,7 @@
     const sv = seats.value;
 
     const filtered = campaigns.filter(c => {
-      const hay = normalize([c.title, c.system, c.day, c.time, c.hook, c.blurb, ...(c.tags||[])].join(" "));
+      const hay = normalize([c.title, c.system, c.day, c.time, c.hook, c.blurb, ...(c.tags || [])].join(" "));
       if (qv && !hay.includes(qv)) return false;
       if (sys && c.system !== sys) return false;
       if (dv && c.day !== dv) return false;
@@ -642,15 +909,19 @@
       return true;
     });
 
-    // Open seats first
     filtered.sort((a,b) => (a.mode === b.mode) ? 0 : (a.mode === "open" ? -1 : 1));
     render(filtered);
   }
 
   async function loadCampaigns(){
     hideNotice();
+
     try{
-      const res = await fetch(LIST_ENDPOINT, { method: "GET", headers: { "Accept": "application/json" } });
+      const res = await fetch(LIST_ENDPOINT, {
+        method: "GET",
+        headers: { "Accept": "application/json" }
+      });
+
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok || data.ok === false){
@@ -668,7 +939,7 @@
       campaigns = list
         .filter(isPublishedLike)
         .map(mapFromApi)
-        .filter(c => c.title); // keep even if slug is missing (we handle it)
+        .filter(c => c.title);
 
       const bad = campaigns.filter(c => !c.slugValid);
       if (bad.length){
@@ -692,7 +963,44 @@
   }
 
   [q, system, day, seats].forEach(x => x.addEventListener("input", applyFilters));
-  loadCampaigns();
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const trigger = document.getElementById("loginTrigger");
+    const popover = document.getElementById("loginPopover");
+
+    if (trigger && popover) {
+      const openPopover = () => {
+        popover.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+      };
+
+      const closePopover = () => {
+        popover.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+      };
+
+      trigger.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (popover.hidden) openPopover();
+        else closePopover();
+      });
+
+      popover.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+
+      document.addEventListener("click", () => {
+        closePopover();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closePopover();
+      });
+    }
+
+    loadCampaigns();
+  });
 </script>
 
 </body>
